@@ -1,8 +1,9 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
-const morgan = require("morgan");
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const config = require("./config");
 
@@ -11,22 +12,22 @@ const teamRouter = require("./routes/teamRouter");
 const question = require("./routes/question");
 const leaderboardRouter = require('./routes/leaderboard.js');
 
+
 require("./initializeFirebase.js");
 
 const app = express();
+app.use(express.json());
 
 mongoose
-  .connect(config.MONGO_URL)
+  .connect(config.mongoURL)
   .then(() => {
-    console.log("connect to database");
+    console.log("connected to database");
   })
   .catch((err) => {
     console.log(err);
   });
 
 app.use(cors());
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(morgan("dev"));
 app.use("/api/auth", authRouter);
 app.use("/api/team", teamRouter);
 app.use("/api/questions", question);
@@ -47,7 +48,7 @@ app.use((req, res, next) => {
 });
 
 if (require.main === module) {
-  app.listen(config.PORT, () => {
-    console.log(`App listening on port ${config.PORT}!`);
+  app.listen(config.port, () => {
+    console.log(`App listening on port ${config.port}!`);
   });
 }
