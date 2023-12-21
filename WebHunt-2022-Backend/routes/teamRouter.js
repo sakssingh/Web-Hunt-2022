@@ -30,18 +30,16 @@ const createTeam = async (req, res, next) => {
         .json({ message: "already in a team" });
     }
     const teamSameName = await Team.find({ teamName });
-    // console.log(teamSameName);
     if (teamSameName.length !== 0) {
       return res
         .status(errCode.CREATE_ERROR)
         .json({ message: "This name is already taken use some other team name!" });
     }
-    const teams = await Team.find();
-    // console.log(teams);
+    const teamLength = await Team.countDocuments();
     const newTeam = new Team({
       teamId,
       teamName,
-      position: (teams ? teams.length : 0) + 1,
+      position: teamLength + 1,
       change: 0,
       solveCount: 0,
       members: [user._id],
@@ -74,7 +72,7 @@ const joinTeam = async (req, res, next) => {
     if (user.teamId) {
       return res
         .status(errCode.CREATE_ERROR)
-        .json({ message: "You already join a team" });
+        .json({ message: "You already joined a team" });
     }
     let team = await Team.findOne({ teamId });
     if (!team) {
@@ -101,7 +99,7 @@ const joinTeam = async (req, res, next) => {
     }
     return res
       .status(errCode.SUCCESS)
-      .json({ message: "team joining successful", teamMembers,team });
+      .json({ message: "team joining successful", teamMembers, team });
   } catch (err) {
     console.log(err);
     return res
