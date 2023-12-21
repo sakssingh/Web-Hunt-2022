@@ -14,12 +14,11 @@ const getLeaderBoard = async (req, res, next) => {
         let newLeaderboard = await Team.find(query).sort(sort);
         newLeaderboard.forEach(async (team, newposition) => {
  			const change = team.position - (newposition + 1);
-            let result = await Team.findByIdAndUpdate(
+            await Team.findByIdAndUpdate(
                 team._id,
                 {position: newposition + 1, change: change},
                 {new: true}
             );
-            // console.log(result);
         });
 
         newLeaderboard = await Team.find(query).sort(sort).populate("members");

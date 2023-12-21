@@ -1,6 +1,5 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const date = require("date-and-time");
 
 const errCode = require("../errCodes");
 const User = require("../models/user");
@@ -14,10 +13,6 @@ const router = express.Router();
 
 const getQuestion = async (req, res) => {
   try {
-    let curtime = new Date();
-    let starttime = new Date(config.startTime);
-    let endtime = new Date(config.endTime);
-
     const { email } = req.userData;
     let user = await User.findOne({ email });
 
@@ -51,9 +46,6 @@ const getQuestion = async (req, res) => {
 const submitQuestion = async (req, res) => {
   const { email } = req.userData;
   try {
-    let curtime = new Date();
-    let endtime = new Date(config.endTime);
-    
     let user = await User.findOne({ email });
     const teamId = user.teamId;
     if(!teamId) {
@@ -80,7 +72,6 @@ const submitQuestion = async (req, res) => {
     await Team.findByIdAndUpdate(
       team._id,
       { solveCount: curQues, latestTime: TimeNow },
-      { new: true }
     );
 
     return res.status(errCode.SUCCESS_CORRECT_ANS).json({ message: "Correct Ans" });

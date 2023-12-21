@@ -35,6 +35,7 @@ function Webhunt() {
 				// console.log(config.BACKEND_DOMAIN)
 				if (user) {
 					const authtoken = await user.getIdToken(false);
+					console.log(authtoken);
 					const response = await axios.post(
 						`${config.BACKEND_DOMAIN}auth/login`,
 						{},
